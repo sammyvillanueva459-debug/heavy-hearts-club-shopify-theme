@@ -1,0 +1,46 @@
+<section class="section account-page">
+  <div class="page-width">
+    <a class="link-arrow" href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a>
+    <h1 class="page-title">{{ 'customer.account.addresses' | t }}</h1>
+
+    {%- paginate customer.addresses by 10 -%}
+      <ul class="address-list" role="list">
+        {%- for address in customer.addresses -%}
+          <li class="address-card">
+            {%- if address == customer.default_address -%}<p class="eyebrow">{{ 'customer.addresses.default' | t }}</p>{%- endif -%}
+            {{ address | format_address }}
+            <details>
+              <summary>{{ 'customer.addresses.edit' | t }}</summary>
+              {%- form 'customer_address', address, class: 'form' -%}
+                {% render 'address-fields', form: form, prefix: address.id %}
+                <button type="submit" class="button">{{ 'customer.addresses.save' | t }}</button>
+              {%- endform -%}
+            </details>
+            <button type="button" class="link-button" data-address-delete="{{ address.url }}" data-confirm="{{ 'customer.addresses.delete_confirm' | t }}">{{ 'customer.addresses.delete' | t }}</button>
+          </li>
+        {%- endfor -%}
+      </ul>
+      {% render 'pagination', paginate: paginate %}
+    {%- endpaginate -%}
+
+    <h2>{{ 'customer.addresses.add' | t }}</h2>
+    {%- form 'customer_address', customer.new_address, class: 'form' -%}
+      {% render 'address-fields', form: form, prefix: 'new' %}
+      <button type="submit" class="button">{{ 'customer.addresses.save' | t }}</button>
+    {%- endform -%}
+  </div>
+
+  <script>
+    document.querySelectorAll('[data-address-delete]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        if (window.confirm(button.dataset.confirm) && window.Shopify && Shopify.postLink) {
+          Shopify.postLink(button.dataset.addressDelete, { parameters: { _method: 'delete' } });
+        }
+      });
+    });
+  </script>
+</section>
+
+{% schema %}
+{ "name": "Addresses" }
+{% endschema %}

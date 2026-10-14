@@ -1,0 +1,72 @@
+{%- comment -%}
+  Built-in department navigation, used only when the header has no menu selected.
+  Each link points at a Shopify collection handle (see docs/COLLECTIONS.md).
+
+  Accepts:
+  - mode: {String} 'desktop' or 'mobile'
+{%- endcomment -%}
+{%- assign departments = 'Men|men|Tops=Hoodies:men-hoodies,T-Shirts:men-t-shirts,Long Sleeves:men-long-sleeves,Sweatshirts:men-sweatshirts,Jackets:men-jackets;;Bottoms=Sweatpants:men-sweatpants,Shorts:men-shorts;;Sets & Gear=Matching Sets:men-matching-sets,Hats:men-hats,Bags:men-bags,Bookbags:men-bookbags,Socks:men-socks||Women|women|Tops=Crop Tops:women-crop-tops,Hoodies:women-hoodies,T-Shirts:women-t-shirts,Long Sleeves:women-long-sleeves,Sweatshirts:women-sweatshirts,Jackets:women-jackets;;Bottoms=Leggings:women-leggings,Sweatpants:women-sweatpants,Shorts:women-shorts;;Sets & Gear=Matching Sets:women-matching-sets,Hats:women-hats,Bags:women-bags,Bookbags:women-bookbags,Socks:women-socks||Kids|kids|Shop By=Boys:kids-boys,Girls:kids-girls;;Clothing=Hoodies:kids-hoodies,T-Shirts:kids-t-shirts,Sweatshirts:kids-sweatshirts,Sweatpants:kids-sweatpants,Shorts:kids-shorts;;Sets & Gear=Matching Sets:kids-matching-sets,Hats:kids-hats,Bookbags:kids-bookbags,Socks:kids-socks||More|all|Shop=New Arrivals:new-arrivals,Best Sellers:best-sellers,Sale:sale;;Discover=Collections:collections,Accessories:accessories,Holiday Specials:holiday-specials' | split: '||' -%}
+
+{%- for department in departments -%}
+  {%- assign d = department | split: '|' -%}
+  {%- assign d_title = d[0] -%}
+  {%- assign d_handle = d[1] -%}
+  {%- assign columns = d[2] | split: ';;' -%}
+  {%- if d_handle == 'all' -%}
+    {%- assign d_url = routes.collections_url -%}
+  {%- else -%}
+    {%- assign d_url = routes.collections_url | append: '/' | append: d_handle -%}
+  {%- endif -%}
+
+  {%- if mode == 'mobile' -%}
+    <li class="mobile-nav__item">
+      <details>
+        <summary>{{ d_title }}{% render 'icon', icon: 'chevron' %}</summary>
+        <ul class="mobile-nav__sub">
+          {%- if d_handle != 'all' -%}
+            <li><a href="{{ d_url }}">{{ 'general.navigation.shop_all' | t: title: d_title }}</a></li>
+          {%- endif -%}
+          {%- for column in columns -%}
+            {%- assign c = column | split: '=' -%}
+            {%- assign links = c[1] | split: ',' -%}
+            {%- for item in links -%}
+              {%- assign i = item | split: ':' -%}
+              {%- assign i_url = routes.collections_url | append: '/' | append: i[1] -%}{%- if i[1] == 'collections' -%}{%- assign i_url = routes.collections_url -%}{%- endif -%}
+              <li><a href="{{ i_url }}">{{ i[0] }}</a></li>
+            {%- endfor -%}
+          {%- endfor -%}
+        </ul>
+      </details>
+    </li>
+  {%- else -%}
+    <li class="nav__item has-mega">
+      <button type="button" class="nav__link" aria-expanded="false" aria-controls="Mega-{{ d_handle }}" data-mega-toggle>
+        {{ d_title }}{% render 'icon', icon: 'chevron' %}
+      </button>
+      <div class="mega" id="Mega-{{ d_handle }}" hidden>
+        <div class="mega__inner page-width">
+          {%- for column in columns -%}
+            {%- assign c = column | split: '=' -%}
+            {%- assign links = c[1] | split: ',' -%}
+            <div class="mega__column">
+              <p class="mega__heading">{{ c[0] }}</p>
+              <ul>
+                {%- for item in links -%}
+                  {%- assign i = item | split: ':' -%}
+                  {%- assign i_url = routes.collections_url | append: '/' | append: i[1] -%}{%- if i[1] == 'collections' -%}{%- assign i_url = routes.collections_url -%}{%- endif -%}
+              {%- assign i_url = routes.collections_url | append: '/' | append: i[1] -%}{%- if i[1] == 'collections' -%}{%- assign i_url = routes.collections_url -%}{%- endif -%}
+                  <li><a href="{{ i_url }}">{{ i[0] }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endfor -%}
+          {%- if d_handle != 'all' -%}
+            <div class="mega__column mega__column--cta">
+              <a class="button button--secondary" href="{{ d_url }}">{{ 'general.navigation.shop_all' | t: title: d_title }}</a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </li>
+  {%- endif -%}
+{%- endfor -%}

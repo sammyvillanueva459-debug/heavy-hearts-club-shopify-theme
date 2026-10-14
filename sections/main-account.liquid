@@ -1,0 +1,54 @@
+<section class="section account-page">
+  <div class="page-width">
+    <div class="section-header">
+      <h1 class="page-title">{{ 'customer.account.title' | t }}</h1>
+      <a class="link-arrow" href="{{ routes.account_logout_url }}">{{ 'customer.account.logout' | t }}</a>
+    </div>
+    <div class="account-grid">
+      <div>
+        <h2>{{ 'customer.orders.title' | t }}</h2>
+        {%- paginate customer.orders by 20 -%}
+          {%- if customer.orders.size > 0 -%}
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th scope="col">{{ 'customer.orders.order' | t }}</th>
+                  <th scope="col">{{ 'customer.orders.date' | t }}</th>
+                  <th scope="col">{{ 'customer.orders.payment_status' | t }}</th>
+                  <th scope="col">{{ 'customer.orders.fulfillment_status' | t }}</th>
+                  <th scope="col">{{ 'customer.orders.total' | t }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {%- for order in customer.orders -%}
+                  <tr>
+                    <th scope="row"><a href="{{ order.customer_url }}">{{ order.name }}</a></th>
+                    <td>{{ order.created_at | time_tag: format: 'date' }}</td>
+                    <td>{{ order.financial_status_label }}</td>
+                    <td>{{ order.fulfillment_status_label }}</td>
+                    <td>{{ order.total_price | money }}</td>
+                  </tr>
+                {%- endfor -%}
+              </tbody>
+            </table>
+          {%- else -%}
+            <p>{{ 'customer.orders.none' | t }}</p>
+          {%- endif -%}
+          {% render 'pagination', paginate: paginate %}
+        {%- endpaginate -%}
+      </div>
+      <div>
+        <h2>{{ 'customer.account.details' | t }}</h2>
+        <p>{{ customer.name | escape }}<br>{{ customer.email }}</p>
+        {%- if customer.default_address -%}
+          <p>{{ customer.default_address | format_address }}</p>
+        {%- endif -%}
+        <a class="link-arrow" href="{{ routes.account_addresses_url }}">{{ 'customer.account.addresses' | t }} ({{ customer.addresses_count }})</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Account" }
+{% endschema %}

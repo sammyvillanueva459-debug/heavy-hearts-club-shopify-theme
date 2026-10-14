@@ -1,0 +1,118 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Heavy Hearts Club",
+    "theme_version": "1.0.0",
+    "theme_author": "Heavy Hearts Club Apparel",
+    "theme_documentation_url": "https://github.com/sammyvillanueva459-debug/heavy-hearts-club-shopify-theme/blob/main/README.md",
+    "theme_support_url": "https://github.com/sammyvillanueva459-debug/heavy-hearts-club-shopify-theme/issues"
+  },
+  {
+    "name": "Brand",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo (your red broken-heart logo)",
+        "info": "Shown as supplied, never recolored."
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo width",
+        "min": 60,
+        "max": 260,
+        "step": 10,
+        "unit": "px",
+        "default": 140
+      },
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      },
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Brand wordmark (used when no logo is set)",
+        "default": "Heavy Hearts Club"
+      }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_background", "label": "Background (warm ivory)", "default": "#f7f2e8" },
+      { "type": "color", "id": "color_surface", "label": "Surface (off-white)", "default": "#fffdf8" },
+      { "type": "color", "id": "color_text", "label": "Text (charcoal)", "default": "#2b2d31" },
+      { "type": "color", "id": "color_muted", "label": "Muted text (slate gray)", "default": "#5f6b78" },
+      { "type": "color", "id": "color_accent", "label": "Accent (washed denim blue)", "default": "#6f8fb0" },
+      { "type": "color", "id": "color_accent_dark", "label": "Accent dark (denim, buttons)", "default": "#3f5d7d" },
+      { "type": "color", "id": "color_burgundy", "label": "Highlight (muted burgundy)", "default": "#7a2e3b" },
+      { "type": "color", "id": "color_border", "label": "Borders", "default": "#ddd5c5" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "font_heading", "label": "Heading font", "default": "work_sans_n7" },
+      { "type": "font_picker", "id": "font_body", "label": "Body font", "default": "work_sans_n4" }
+    ]
+  },
+  {
+    "name": "Products",
+    "settings": [
+      {
+        "type": "text",
+        "id": "color_option_names",
+        "label": "Color option names",
+        "info": "Comma separated, case-insensitive. The first product option with a matching name drives the color gallery.",
+        "default": "Color,Colour"
+      },
+      {
+        "type": "checkbox",
+        "id": "prefer_back_image",
+        "label": "Prefer the back design as the first image of a color",
+        "info": "Uses media tagged view:back for that color when available.",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_secondary_image_on_hover",
+        "label": "Show second image on card hover",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "select",
+        "id": "cart_type",
+        "label": "Cart type",
+        "options": [
+          { "value": "drawer", "label": "Drawer" },
+          { "value": "page", "label": "Page" }
+        ],
+        "default": "drawer"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_note",
+        "label": "Enable cart note",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_youtube", "label": "YouTube" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" }
+    ]
+  }
+]

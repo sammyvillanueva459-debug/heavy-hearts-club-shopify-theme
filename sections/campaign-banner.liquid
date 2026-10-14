@@ -1,0 +1,49 @@
+<section class="campaign section" style="--campaign-bg: {{ section.settings.background }};">
+  <div class="page-width campaign__inner campaign__inner--{{ section.settings.layout }}">
+    <div class="campaign__media">
+      {%- if section.settings.image != blank -%}
+        {{
+          section.settings.image
+          | image_url: width: 1600
+          | image_tag: widths: '600, 900, 1200, 1600', sizes: '(min-width: 990px) 50vw, 100vw', loading: 'lazy', alt: section.settings.image.alt
+        }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+    <div class="campaign__content">
+      {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow | escape }}</p>{%- endif -%}
+      <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
+      {%- if section.settings.text != blank -%}<p>{{ section.settings.text | escape }}</p>{%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button" href="{{ section.settings.link | default: routes.collections_url }}">{{ section.settings.button_label | escape }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Seasonal campaign",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Image position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "color", "id": "background", "label": "Background", "default": "#dfe7ef" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Holiday Specials" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Cozy season is here" },
+    { "type": "text", "id": "text", "label": "Text", "default": "Gifts, matching sets and layers made for cold-weather days." },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Shop Holiday" },
+    { "type": "url", "id": "link", "label": "Button link" }
+  ],
+  "presets": [{ "name": "Seasonal campaign" }]
+}
+{% endschema %}

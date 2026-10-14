@@ -1,0 +1,21 @@
+<cart-drawer class="cart-drawer" id="CartDrawer" hidden data-cart-drawer>
+  <div class="cart-drawer__overlay" data-cart-close></div>
+  <div class="cart-drawer__panel" role="dialog" aria-modal="true" aria-labelledby="CartDrawerTitle" tabindex="-1">
+    <div class="cart-drawer__header">
+      <h2 id="CartDrawerTitle">{{ 'cart.general.title' | t }}</h2>
+      <button type="button" class="icon-button" data-cart-close>
+        {% render 'icon', icon: 'close' %}
+        <span class="visually-hidden">{{ 'cart.general.close' | t }}</span>
+      </button>
+    </div>
+    <div class="cart-drawer__body" data-cart-drawer-inner data-item-count="{{ cart.item_count }}">
+      {% render 'cart-contents', context: 'drawer' %}
+    </div>
+  </div>
+</cart-drawer>
+
+{% schema %}
+{
+  "name": "Cart drawer"
+}
+{% endschema %}

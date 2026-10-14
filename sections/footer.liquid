@@ -1,0 +1,85 @@
+<footer class="site-footer">
+  <div class="page-width site-footer__grid">
+    {%- for block in section.blocks -%}
+      <div class="site-footer__block" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+          {%- when 'menu' -%}
+            {%- assign footer_menu = linklists[block.settings.menu] -%}
+            <h2 class="site-footer__heading">{{ block.settings.heading | escape }}</h2>
+            {%- if footer_menu.links.size > 0 -%}
+              <ul>
+                {%- for link in footer_menu.links -%}
+                  <li><a href="{{ link.url }}">{{ link.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          {%- when 'text' -%}
+            <h2 class="site-footer__heading">{{ block.settings.heading | escape }}</h2>
+            <div class="rte">{{ block.settings.text }}</div>
+          {%- when 'newsletter' -%}
+            <h2 class="site-footer__heading">{{ block.settings.heading | escape }}</h2>
+            {% render 'newsletter-form', id: block.id %}
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="site-footer__bottom page-width">
+    <ul class="social-links">
+      {%- assign socials = 'instagram,tiktok,facebook,youtube,pinterest' | split: ',' -%}
+      {%- for social in socials -%}
+        {%- assign setting_key = 'social_' | append: social -%}
+        {%- assign social_url = settings[setting_key] -%}
+        {%- if social_url != blank -%}
+          <li><a href="{{ social_url }}" rel="noopener" target="_blank">{{ social | capitalize }}<span class="visually-hidden"> ({{ 'accessibility.new_window' | t }})</span></a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+
+    {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+      <ul class="payment-icons" role="list">
+        {%- for type in shop.enabled_payment_types -%}
+          <li>{{ type | payment_type_svg_tag: class: 'payment-icon' }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    <p class="site-footer__copyright">&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ 'general.footer.rights' | t }} {{ powered_by_link }}</p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Show payment icons", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Help" },
+        { "type": "link_list", "id": "menu", "label": "Menu", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Heavy Hearts Club" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Streetwear for the heavy hearted. Oversized fits, soft fabrics, made to be lived in.</p>" }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Heading", "default": "Stay in the loop" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Footer" }]
+}
+{% endschema %}

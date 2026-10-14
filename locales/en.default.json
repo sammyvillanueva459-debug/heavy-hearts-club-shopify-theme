@@ -1,0 +1,197 @@
+{
+  "accessibility": {
+    "announcement": "Announcements",
+    "main_navigation": "Main navigation",
+    "new_window": "opens in a new window",
+    "skip_to_content": "Skip to content"
+  },
+  "blog": {
+    "back": "Back to the blog"
+  },
+  "cart": {
+    "general": {
+      "checkout": "Check out",
+      "close": "Close cart",
+      "continue_shopping": "Continue shopping",
+      "decrease": "Decrease quantity",
+      "empty": "Your cart is empty",
+      "error": "Something went wrong updating your cart. Please try again.",
+      "increase": "Increase quantity",
+      "note": "Order note",
+      "quantity": "Quantity",
+      "remove": "Remove",
+      "subtotal": "Subtotal",
+      "taxes_shipping": "Taxes and shipping calculated at checkout. Discount codes can be applied at checkout.",
+      "title": "Cart"
+    }
+  },
+  "collection": {
+    "all_collections": "Collections",
+    "filters": {
+      "apply": "Apply filters",
+      "clear_all": "Clear all filters",
+      "from": "From",
+      "title": "Filter",
+      "to": "To"
+    },
+    "no_products": "No products found in this collection.",
+    "product_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "sort": {
+      "label": "Sort by"
+    }
+  },
+  "contact": {
+    "email": "Email",
+    "message": "Message",
+    "name": "Name",
+    "send": "Send",
+    "success": "Thanks for contacting us. We'll get back to you soon."
+  },
+  "customer": {
+    "account": {
+      "addresses": "Addresses",
+      "details": "Account details",
+      "logout": "Log out",
+      "title": "Account"
+    },
+    "activate": {
+      "decline": "Decline invitation",
+      "submit": "Activate account",
+      "title": "Activate account"
+    },
+    "addresses": {
+      "add": "Add a new address",
+      "address1": "Address",
+      "address2": "Apartment, suite, etc.",
+      "city": "City",
+      "company": "Company",
+      "country": "Country/region",
+      "default": "Default address",
+      "delete": "Delete",
+      "delete_confirm": "Delete this address?",
+      "edit": "Edit",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "phone": "Phone",
+      "save": "Save address",
+      "set_default": "Set as default address",
+      "zip": "Postal/ZIP code"
+    },
+    "login": {
+      "create": "Create account",
+      "email": "Email",
+      "forgot": "Forgot your password?",
+      "password": "Password",
+      "submit": "Sign in",
+      "title": "Log in"
+    },
+    "orders": {
+      "billing_address": "Billing address",
+      "cancelled": "Order cancelled on {{ date }}",
+      "date": "Date",
+      "fulfillment_status": "Fulfillment",
+      "none": "You haven't placed any orders yet.",
+      "order": "Order",
+      "payment_status": "Payment",
+      "product": "Product",
+      "shipping_address": "Shipping address",
+      "title": "Order history",
+      "total": "Total"
+    },
+    "recover": {
+      "submit": "Send reset email",
+      "success": "We've sent you an email with a link to reset your password.",
+      "title": "Reset your password"
+    },
+    "register": {
+      "first_name": "First name",
+      "last_name": "Last name",
+      "login": "Already have an account? Log in",
+      "submit": "Create account",
+      "title": "Create account"
+    },
+    "reset": {
+      "confirm": "Confirm password",
+      "submit": "Reset password",
+      "title": "Reset account password"
+    }
+  },
+  "general": {
+    "404": {
+      "subtext": "The page you were looking for doesn't exist.",
+      "title": "Page not found"
+    },
+    "footer": {
+      "rights": "All rights reserved."
+    },
+    "meta": {
+      "page": "Page {{ page }}",
+      "tagged": "Tagged \"{{ tags }}\""
+    },
+    "navigation": {
+      "close_menu": "Close menu",
+      "menu": "Menu",
+      "open_menu": "Open menu",
+      "shop_all": "Shop all {{ title }}"
+    },
+    "pagination": {
+      "label": "Pagination",
+      "next": "Next page",
+      "previous": "Previous page"
+    },
+    "password": {
+      "enter": "Enter",
+      "label": "Store password"
+    },
+    "search": {
+      "placeholder": "Search hoodies, tees, jeans...",
+      "submit": "Search",
+      "title": "Search"
+    },
+    "view_all": "View all"
+  },
+  "newsletter": {
+    "email": "Email",
+    "subscribe": "Subscribe",
+    "success": "Thanks for subscribing!"
+  },
+  "onboarding": {
+    "product_title": "Example product"
+  },
+  "products": {
+    "gallery": {
+      "fallback_notice": "No photos are assigned to {{ color }}. Tag media with [[color:{{ color }}]] or set the hhc.color_media metafield (theme editor only).",
+      "label": "{{ color }} product photos",
+      "next": "Next photo",
+      "previous": "Previous photo",
+      "show_image": "Show photo {{ number }}"
+    },
+    "product": {
+      "add_to_cart": "Add to cart",
+      "adding": "Adding...",
+      "colors_count": {
+        "one": "{{ count }} color",
+        "other": "{{ count }} colors"
+      },
+      "from_price": "From {{ price }}",
+      "in_stock": "In stock",
+      "low_stock": "Only {{ quantity }} left",
+      "sale": "Sale",
+      "sold_out": "Sold out",
+      "unavailable": "Unavailable"
+    }
+  },
+  "search": {
+    "no_results": "No results found",
+    "no_results_for": "No results found for \"{{ terms }}\".",
+    "results_for": {
+      "one": "{{ count }} result for \"{{ terms }}\"",
+      "other": "{{ count }} results for \"{{ terms }}\""
+    },
+    "title": "Search",
+    "view_all": "View all results for \"{{ terms }}\""
+  }
+}
