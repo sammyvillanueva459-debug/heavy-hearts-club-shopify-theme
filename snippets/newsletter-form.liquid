@@ -1,0 +1,19 @@
+{%- comment -%}
+  Shopify customer newsletter form.
+  Accepts:
+  - id: {String} unique id prefix
+{%- endcomment -%}
+{%- form 'customer', id: id, class: 'newsletter-form' -%}
+  <input type="hidden" name="contact[tags]" value="newsletter">
+  <div class="newsletter-form__field">
+    <label class="visually-hidden" for="{{ id }}-email">{{ 'newsletter.email' | t }}</label>
+    <input id="{{ id }}-email" type="email" name="contact[email]" value="{{ form.email }}" placeholder="{{ 'newsletter.email' | t }}" autocomplete="email" required aria-required="true"{% if form.errors %} aria-invalid="true"{% endif %}>
+    <button type="submit" class="button">{{ 'newsletter.subscribe' | t }}</button>
+  </div>
+  {%- if form.posted_successfully? -%}
+    <p class="form-message form-message--success" role="status">{{ 'newsletter.success' | t }}</p>
+  {%- endif -%}
+  {%- if form.errors -%}
+    <p class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</p>
+  {%- endif -%}
+{%- endform -%}

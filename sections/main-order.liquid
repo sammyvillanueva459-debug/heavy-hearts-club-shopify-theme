@@ -1,0 +1,52 @@
+<section class="section account-page">
+  <div class="page-width">
+    <a class="link-arrow" href="{{ routes.account_url }}">{{ 'customer.account.title' | t }}</a>
+    <h1 class="page-title">{{ 'customer.orders.order' | t }} {{ order.name }}</h1>
+    <p>{{ order.created_at | time_tag: format: 'date' }}</p>
+    {%- if order.cancelled -%}
+      <p class="form-message form-message--error">{{ 'customer.orders.cancelled' | t: date: order.cancelled_at | time_tag: format: 'date' }}</p>
+    {%- endif -%}
+    <table class="orders-table">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'customer.orders.product' | t }}</th>
+          <th scope="col">{{ 'cart.general.quantity' | t }}</th>
+          <th scope="col">{{ 'customer.orders.total' | t }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for line_item in order.line_items -%}
+          <tr>
+            <th scope="row">
+              {{ line_item.title | escape }}
+              {%- if line_item.fulfillment %}<br><small>{{ line_item.fulfillment.tracking_company }} {{ line_item.fulfillment.tracking_number }}</small>{% endif -%}
+            </th>
+            <td>{{ line_item.quantity }}</td>
+            <td>{{ line_item.final_line_price | money }}</td>
+          </tr>
+        {%- endfor -%}
+      </tbody>
+      <tfoot>
+        <tr><th scope="row" colspan="2">{{ 'cart.general.subtotal' | t }}</th><td>{{ order.line_items_subtotal_price | money }}</td></tr>
+        {%- for discount in order.discounts -%}
+          <tr><th scope="row" colspan="2">{{ discount.code | default: discount.title | escape }}</th><td>{{ discount.savings | money }}</td></tr>
+        {%- endfor -%}
+        {%- for shipping_method in order.shipping_methods -%}
+          <tr><th scope="row" colspan="2">{{ shipping_method.title | escape }}</th><td>{{ shipping_method.price | money }}</td></tr>
+        {%- endfor -%}
+        {%- for tax_line in order.tax_lines -%}
+          <tr><th scope="row" colspan="2">{{ tax_line.title | escape }}</th><td>{{ tax_line.price | money }}</td></tr>
+        {%- endfor -%}
+        <tr><th scope="row" colspan="2">{{ 'customer.orders.total' | t }}</th><td>{{ order.total_price | money_with_currency }}</td></tr>
+      </tfoot>
+    </table>
+    <div class="account-grid">
+      <div><h2>{{ 'customer.orders.billing_address' | t }}</h2>{{ order.billing_address | format_address }}</div>
+      <div><h2>{{ 'customer.orders.shipping_address' | t }}</h2>{{ order.shipping_address | format_address }}</div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Order" }
+{% endschema %}

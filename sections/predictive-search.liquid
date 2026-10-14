@@ -1,0 +1,34 @@
+{%- comment -%}
+  Rendered by the Predictive Search API (/search/suggest?section_id=predictive-search).
+{%- endcomment -%}
+<div id="predictive-search-results" data-predictive-content>
+  {%- if predictive_search.performed -%}
+    {%- assign products = predictive_search.resources.products -%}
+    {%- assign collections = predictive_search.resources.collections -%}
+    {%- if products.size == 0 and collections.size == 0 -%}
+      <p class="predictive-results__empty">{{ 'search.no_results_for' | t: terms: predictive_search.terms }}</p>
+    {%- else -%}
+      {%- if collections.size > 0 -%}
+        <ul class="predictive-results__collections" role="list">
+          {%- for collection in collections -%}
+            <li><a href="{{ collection.url }}">{{ collection.title | escape }}</a></li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      {%- if products.size > 0 -%}
+        <ul class="product-grid product-grid--4" role="list">
+          {%- for product in products -%}
+            <li>{% render 'product-card', product: product %}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <a class="link-arrow" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&options[prefix]=last">{{ 'search.view_all' | t: terms: predictive_search.terms }}</a>
+    {%- endif -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Predictive search"
+}
+{% endschema %}

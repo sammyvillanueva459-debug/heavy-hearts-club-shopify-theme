@@ -1,0 +1,21 @@
+{%- comment -%}
+  Theme design tokens driven by theme settings.
+{%- endcomment -%}
+<style>
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+
+  :root {
+    --color-background: {{ settings.color_background }};
+    --color-surface: {{ settings.color_surface }};
+    --color-text: {{ settings.color_text }};
+    --color-muted: {{ settings.color_muted }};
+    --color-accent: {{ settings.color_accent }};
+    --color-accent-dark: {{ settings.color_accent_dark }};
+    --color-burgundy: {{ settings.color_burgundy }};
+    --color-border: {{ settings.color_border }};
+    --font-body: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    --font-heading: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+    --logo-width: {{ settings.logo_width }}px;
+  }
+</style>

@@ -1,0 +1,31 @@
+<section class="section account-page">
+  <div class="page-width page-width--narrow">
+    <div id="CustomerLogin">
+      <h1 class="page-title">{{ 'customer.login.title' | t }}</h1>
+      {%- form 'customer_login', novalidate: 'novalidate', class: 'form' -%}
+        {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        <div class="field"><label for="CustomerEmail">{{ 'customer.login.email' | t }}</label><input type="email" name="customer[email]" id="CustomerEmail" autocomplete="email" required></div>
+        {%- if form.password_needed -%}
+          <div class="field"><label for="CustomerPassword">{{ 'customer.login.password' | t }}</label><input type="password" name="customer[password]" id="CustomerPassword" autocomplete="current-password" required></div>
+          <p><a href="#recover">{{ 'customer.login.forgot' | t }}</a></p>
+        {%- endif -%}
+        <button type="submit" class="button button--full">{{ 'customer.login.submit' | t }}</button>
+        <p><a href="{{ routes.account_register_url }}">{{ 'customer.login.create' | t }}</a></p>
+      {%- endform -%}
+    </div>
+
+    <div id="recover" class="account-recover">
+      <h2>{{ 'customer.recover.title' | t }}</h2>
+      {%- form 'recover_customer_password', class: 'form' -%}
+        {%- if form.posted_successfully? -%}<p class="form-message form-message--success" role="status">{{ 'customer.recover.success' | t }}</p>{%- endif -%}
+        {%- if form.errors -%}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{%- endif -%}
+        <div class="field"><label for="RecoverEmail">{{ 'customer.login.email' | t }}</label><input type="email" name="email" id="RecoverEmail" autocomplete="email" required></div>
+        <button type="submit" class="button button--secondary">{{ 'customer.recover.submit' | t }}</button>
+      {%- endform -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{ "name": "Login" }
+{% endschema %}

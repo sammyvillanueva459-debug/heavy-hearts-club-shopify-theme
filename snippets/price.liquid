@@ -1,0 +1,28 @@
+{%- comment -%}
+  Renders price information straight from Shopify (no computed or fake discounts).
+  Accepts:
+  - product: {Object} product
+  - variant: {Object} (optional) variant to price; defaults to the product's lowest price
+{%- endcomment -%}
+{%- if variant -%}
+  {%- assign current_price = variant.price -%}
+  {%- assign current_compare = variant.compare_at_price -%}
+{%- else -%}
+  {%- assign current_price = product.price -%}
+  {%- assign current_compare = product.compare_at_price -%}
+{%- endif -%}
+<div class="price{% if current_compare > current_price %} price--on-sale{% endif %}" data-price>
+  {%- if current_compare > current_price -%}
+    <s class="price__compare">{{ current_compare | money }}</s>
+    <span class="price__current">{{ current_price | money }}</span>
+  {%- else -%}
+    {%- if product.price_varies and variant == blank -%}
+      <span class="price__current">{{ 'products.product.from_price' | t: price: current_price | money }}</span>
+    {%- else -%}
+      <span class="price__current">{{ current_price | money }}</span>
+    {%- endif -%}
+  {%- endif -%}
+  {%- if variant and variant.unit_price_measurement -%}
+    <span class="price__unit">{{ variant.unit_price | money }}/{{ variant.unit_price_measurement.reference_value }}{{ variant.unit_price_measurement.reference_unit }}</span>
+  {%- endif -%}
+</div>

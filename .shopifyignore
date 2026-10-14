@@ -1,0 +1,9 @@
+node_modules
+tests
+docs
+scripts
+package.json
+package-lock.json
+.github
+.theme-check.yml
+README.md

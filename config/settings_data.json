@@ -1,0 +1,19 @@
+{
+  "current": {
+    "color_background": "#f7f2e8",
+    "color_surface": "#fffdf8",
+    "color_text": "#2b2d31",
+    "color_muted": "#5f6b78",
+    "color_accent": "#6f8fb0",
+    "color_accent_dark": "#3f5d7d",
+    "color_burgundy": "#7a2e3b",
+    "color_border": "#ddd5c5",
+    "brand_name": "Heavy Hearts Club",
+    "logo_width": 140,
+    "color_option_names": "Color,Colour",
+    "prefer_back_image": true,
+    "show_secondary_image_on_hover": true,
+    "cart_type": "drawer",
+    "show_cart_note": true
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "men": { "type": "button", "settings": { "label": "Shop Men", "link": "shopify://collections/men" } },
+        "women": { "type": "button", "settings": { "label": "Shop Women", "link": "shopify://collections/women" } },
+        "kids": { "type": "button", "settings": { "label": "Shop Kids", "link": "shopify://collections/kids", "style": "secondary" } }
+      },
+      "block_order": ["men", "women", "kids"],
+      "settings": {
+        "eyebrow": "New season",
+        "heading": "Heavy Hearts Club",
+        "text": "Oversized hoodies, baggy denim and soft everyday sets.",
+        "height": 80,
+        "text_align": "left"
+      }
+    },
+    "new_arrivals": {
+      "type": "featured-collection",
+      "settings": { "heading": "New Arrivals", "collection": "new-arrivals", "products_to_show": 8, "columns": "4" }
+    },
+    "categories": {
+      "type": "category-grid",
+      "blocks": {
+        "men": { "type": "tile", "settings": { "title": "Men", "link": "shopify://collections/men" } },
+        "women": { "type": "tile", "settings": { "title": "Women", "link": "shopify://collections/women" } },
+        "kids": { "type": "tile", "settings": { "title": "Kids", "link": "shopify://collections/kids" } }
+      },
+      "block_order": ["men", "women", "kids"],
+      "settings": { "heading": "Shop by Department", "columns": "3" }
+    },
+    "trending": {
+      "type": "featured-collection",
+      "settings": { "heading": "Trending Now", "collection": "best-sellers", "products_to_show": 8, "columns": "4" }
+    },
+    "matching_sets": {
+      "type": "featured-collection",
+      "settings": { "heading": "Matching Sets", "collection": "matching-sets", "products_to_show": 4, "columns": "4" }
+    },
+    "collections": {
+      "type": "collection-list",
+      "blocks": {
+        "c1": { "type": "collection", "settings": { "collection": "men-hoodies" } },
+        "c2": { "type": "collection", "settings": { "collection": "women-crop-tops" } },
+        "c3": { "type": "collection", "settings": { "collection": "kids-boys" } },
+        "c4": { "type": "collection", "settings": { "collection": "accessories" } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4"],
+      "settings": { "heading": "Featured Collections", "columns": "4" }
+    },
+    "campaign": {
+      "type": "campaign-banner",
+      "settings": {
+        "eyebrow": "Holiday Specials",
+        "heading": "Cozy season is here",
+        "text": "Gifts, matching sets and layers made for cold-weather days.",
+        "button_label": "Shop Holiday",
+        "link": "shopify://collections/holiday-specials",
+        "layout": "left",
+        "background": "#dfe7ef"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": { "heading": "Join the Club", "text": "Be first to hear about drops, restocks and offers.", "padding": 64 }
+    }
+  },
+  "order": ["hero", "new_arrivals", "categories", "trending", "matching_sets", "collections", "campaign", "newsletter"]
+}

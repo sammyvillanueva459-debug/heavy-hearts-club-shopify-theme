@@ -1,0 +1,17 @@
+{
+  "name": "Footer group",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "about": { "type": "text", "settings": { "heading": "Heavy Hearts Club", "text": "<p>Streetwear for the heavy hearted. Oversized fits, soft fabrics, made to be lived in.</p>" } },
+        "help": { "type": "menu", "settings": { "heading": "Help", "menu": "footer" } },
+        "signup": { "type": "newsletter", "settings": { "heading": "Stay in the loop" } }
+      },
+      "block_order": ["about", "help", "signup"],
+      "settings": { "show_payment_icons": true }
+    }
+  },
+  "order": ["footer"]
+}

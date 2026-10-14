@@ -1,0 +1,24 @@
+# Theme Check configuration for Heavy Hearts Club
+extends: theme-check:recommended
+ignore:
+  - node_modules/*
+  - tests/*
+  - docs/*
+
+# The department fallback menu contains plain handles on purpose.
+SyntaxError:
+  enabled: true
+UnusedAssign:
+  enabled: true
+ParserBlockingScript:
+  enabled: true
+AssetSizeCSS:
+  enabled: true
+  threshold_in_bytes: 150000
+AssetSizeJavaScript:
+  enabled: true
+  threshold_in_bytes: 100000
+RemoteAsset:
+  enabled: true
+MissingTemplate:
+  enabled: true

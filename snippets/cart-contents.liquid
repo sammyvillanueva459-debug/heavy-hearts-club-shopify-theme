@@ -1,0 +1,76 @@
+{%- comment -%}
+  Cart lines + totals shared by the cart drawer and the cart page.
+  All prices and discounts come straight from Shopify's cart object.
+  Accepts:
+  - context: {String} 'drawer' or 'page'
+{%- endcomment -%}
+{%- if cart.item_count == 0 -%}
+  <div class="cart-empty">
+    <p>{{ 'cart.general.empty' | t }}</p>
+    <a class="button" href="{{ routes.all_products_url }}">{{ 'cart.general.continue_shopping' | t }}</a>
+  </div>
+{%- else -%}
+  <form action="{{ routes.cart_url }}" method="post" id="CartForm-{{ context }}" class="cart-form" novalidate>
+    <ul class="cart-items" role="list">
+      {%- for item in cart.items -%}
+        <li class="cart-item" data-cart-item data-line="{{ forloop.index }}" data-key="{{ item.key }}">
+          <a class="cart-item__media" href="{{ item.url }}">
+            {%- if item.image -%}
+              <img src="{{ item.image | image_url: width: 240 }}" alt="{{ item.image.alt | default: item.product.title | escape }}" width="120" height="{{ 120 | divided_by: item.image.aspect_ratio | round }}" loading="lazy">
+            {%- else -%}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </a>
+          <div class="cart-item__details">
+            <a class="cart-item__title" href="{{ item.url }}">{{ item.product.title | escape }}</a>
+            {%- unless item.product.has_only_default_variant -%}
+              <dl class="cart-item__options">
+                {%- for option in item.options_with_values -%}
+                  <div><dt>{{ option.name | escape }}:</dt> <dd>{{ option.value | escape }}</dd></div>
+                {%- endfor -%}
+              </dl>
+            {%- endunless -%}
+            {%- if item.line_level_discount_allocations.size > 0 -%}
+              <ul class="cart-item__discounts" role="list">
+                {%- for allocation in item.line_level_discount_allocations -%}
+                  <li class="discount-badge">{{ allocation.discount_application.title | escape }} (-{{ allocation.amount | money }})</li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+            <div class="cart-item__row">
+              <div class="quantity" data-quantity>
+                <button type="button" class="quantity__button" data-cart-qty-minus aria-label="{{ 'cart.general.decrease' | t }}">{% render 'icon', icon: 'minus' %}</button>
+                <label class="visually-hidden" for="Qty-{{ context }}-{{ item.key }}">{{ 'cart.general.quantity' | t }}</label>
+                <input id="Qty-{{ context }}-{{ item.key }}" class="quantity__input" type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric" data-cart-qty>
+                <button type="button" class="quantity__button" data-cart-qty-plus aria-label="{{ 'cart.general.increase' | t }}">{% render 'icon', icon: 'plus' %}</button>
+              </div>
+              <div class="cart-item__price">
+                {%- if item.original_line_price != item.final_line_price -%}
+                  <s>{{ item.original_line_price | money }}</s>
+                {%- endif -%}
+                <span>{{ item.final_line_price | money }}</span>
+              </div>
+            </div>
+            <a class="cart-item__remove" href="{{ item.url_to_remove }}" data-cart-remove>{{ 'cart.general.remove' | t }}</a>
+          </div>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if settings.show_cart_note -%}
+      <div class="cart-note">
+        <label for="CartNote-{{ context }}">{{ 'cart.general.note' | t }}</label>
+        <textarea id="CartNote-{{ context }}" name="note" rows="2" data-cart-note>{{ cart.note }}</textarea>
+      </div>
+    {%- endif -%}
+
+    <div class="cart-totals">
+      {%- for discount in cart.cart_level_discount_applications -%}
+        <p class="cart-totals__row cart-totals__discount"><span>{{ discount.title | escape }}</span><span>-{{ discount.total_allocated_amount | money }}</span></p>
+      {%- endfor -%}
+      <p class="cart-totals__row cart-totals__subtotal"><span>{{ 'cart.general.subtotal' | t }}</span><span>{{ cart.total_price | money_with_currency }}</span></p>
+      <p class="cart-totals__note">{{ 'cart.general.taxes_shipping' | t }}</p>
+      <button type="submit" name="checkout" class="button button--full" {% if cart == empty %}disabled{% endif %}>{{ 'cart.general.checkout' | t }}</button>
+    </div>
+  </form>
+{%- endif -%}

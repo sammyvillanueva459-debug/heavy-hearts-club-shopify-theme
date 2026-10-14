@@ -1,0 +1,22 @@
+{%- comment -%}
+  Accepts:
+  - form: {Object} customer_address form
+  - prefix: {String} unique id prefix
+{%- endcomment -%}
+{%- assign fields = 'first_name,last_name,company,address1,address2,city,zip,phone' | split: ',' -%}
+{%- for field in fields -%}
+  {%- assign field_key = 'customer.addresses.' | append: field -%}
+  <div class="field">
+    <label for="Addr-{{ prefix }}-{{ field }}">{{ field_key | t }}</label>
+    <input type="text" id="Addr-{{ prefix }}-{{ field }}" name="address[{{ field }}]" value="{{ form[field] }}">
+  </div>
+{%- endfor -%}
+<div class="field">
+  <label for="Addr-{{ prefix }}-country">{{ 'customer.addresses.country' | t }}</label>
+  <select id="Addr-{{ prefix }}-country" name="address[country]" autocomplete="country">
+    {{ all_country_option_tags }}
+  </select>
+</div>
+<div class="field">
+  <label for="Addr-{{ prefix }}-default"><input type="checkbox" id="Addr-{{ prefix }}-default" name="address[default]" value="1"> {{ 'customer.addresses.set_default' | t }}</label>
+</div>

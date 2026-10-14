@@ -1,0 +1,31 @@
+{%- comment -%}
+  Renders an inline SVG icon.
+  Accepts:
+  - icon: {String} cart | search | menu | close | account | chevron | arrow-left | arrow-right | plus | minus | heart
+{%- endcomment -%}
+<svg class="icon icon-{{ icon }}" aria-hidden="true" focusable="false" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  {%- case icon -%}
+    {%- when 'cart' -%}
+      <path d="M5 8h14l-1.2 11H6.2L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+    {%- when 'search' -%}
+      <circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.5 4.5"></path>
+    {%- when 'menu' -%}
+      <path d="M4 7h16M4 12h16M4 17h16"></path>
+    {%- when 'close' -%}
+      <path d="m6 6 12 12M18 6 6 18"></path>
+    {%- when 'account' -%}
+      <circle cx="12" cy="8" r="4"></circle><path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
+    {%- when 'chevron' -%}
+      <path d="m7 10 5 5 5-5"></path>
+    {%- when 'arrow-left' -%}
+      <path d="m15 5-7 7 7 7"></path>
+    {%- when 'arrow-right' -%}
+      <path d="m9 5 7 7-7 7"></path>
+    {%- when 'plus' -%}
+      <path d="M12 5v14M5 12h14"></path>
+    {%- when 'minus' -%}
+      <path d="M5 12h14"></path>
+    {%- when 'heart' -%}
+      <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"></path>
+  {%- endcase -%}
+</svg>

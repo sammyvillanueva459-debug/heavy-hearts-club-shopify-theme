@@ -1,0 +1,158 @@
+{%- assign main_menu = linklists[section.settings.menu] -%}
+<header class="site-header{% if section.settings.sticky %} site-header--sticky{% endif %}" data-site-header>
+  <div class="site-header__inner page-width">
+    <button type="button" class="icon-button site-header__menu-toggle" aria-expanded="false" aria-controls="MobileNav" data-mobile-nav-open>
+      {% render 'icon', icon: 'menu' %}
+      <span class="visually-hidden">{{ 'general.navigation.open_menu' | t }}</span>
+    </button>
+
+    <a class="site-header__logo" href="{{ routes.root_url }}">
+      {%- if settings.logo != blank -%}
+        <img
+          src="{{ settings.logo | image_url: width: 520 }}"
+          srcset="{{ settings.logo | image_url: width: 260 }} 1x, {{ settings.logo | image_url: width: 520 }} 2x"
+          alt="{{ shop.name | escape }}"
+          width="{{ settings.logo_width }}"
+          height="{{ settings.logo_width | divided_by: settings.logo.aspect_ratio | round }}"
+          style="width: var(--logo-width); height: auto;"
+        >
+      {%- else -%}
+        <span class="site-header__wordmark">{{ settings.brand_name | default: shop.name }}<sup>&trade;</sup></span>
+      {%- endif -%}
+    </a>
+
+    <nav class="site-nav" aria-label="{{ 'accessibility.main_navigation' | t }}">
+      <ul class="site-nav__list">
+        {%- if main_menu != blank and main_menu.links.size > 0 -%}
+          {%- for link in main_menu.links -%}
+            {%- if link.links.size > 0 -%}
+              <li class="nav__item has-mega">
+                <button type="button" class="nav__link{% if link.active or link.child_active %} is-active{% endif %}" aria-expanded="false" aria-controls="Mega-{{ section.id }}-{{ forloop.index }}" data-mega-toggle>
+                  {{ link.title | escape }}{% render 'icon', icon: 'chevron' %}
+                </button>
+                <div class="mega" id="Mega-{{ section.id }}-{{ forloop.index }}" hidden>
+                  <div class="mega__inner page-width">
+                    {%- for child in link.links -%}
+                      <div class="mega__column">
+                        <p class="mega__heading"><a href="{{ child.url }}">{{ child.title | escape }}</a></p>
+                        {%- if child.links.size > 0 -%}
+                          <ul>
+                            {%- for grandchild in child.links -%}
+                              <li><a href="{{ grandchild.url }}"{% if grandchild.current %} aria-current="page"{% endif %}>{{ grandchild.title | escape }}</a></li>
+                            {%- endfor -%}
+                          </ul>
+                        {%- endif -%}
+                      </div>
+                    {%- endfor -%}
+                    <div class="mega__column mega__column--cta">
+                      <a class="button button--secondary" href="{{ link.url }}">{{ 'general.navigation.shop_all' | t: title: link.title }}</a>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            {%- else -%}
+              <li class="nav__item">
+                <a class="nav__link{% if link.active %} is-active{% endif %}" href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+              </li>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- else -%}
+          {% render 'mega-menu-default', mode: 'desktop' %}
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <button type="button" class="icon-button" aria-expanded="false" aria-controls="SearchPanel" data-search-toggle>
+        {% render 'icon', icon: 'search' %}
+        <span class="visually-hidden">{{ 'general.search.title' | t }}</span>
+      </button>
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="icon-button" href="{{ routes.account_url }}">
+          {% render 'icon', icon: 'account' %}
+          <span class="visually-hidden">{% if customer %}{{ 'customer.account.title' | t }}{% else %}{{ 'customer.login.title' | t }}{% endif %}</span>
+        </a>
+      {%- endif -%}
+      <a class="icon-button cart-toggle" href="{{ routes.cart_url }}" data-cart-toggle aria-haspopup="dialog">
+        {% render 'icon', icon: 'cart' %}
+        <span class="visually-hidden">{{ 'cart.general.title' | t }}</span>
+        <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count aria-live="polite">{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="search-panel" id="SearchPanel" hidden data-search-panel>
+    <div class="page-width">
+      <form class="search-form" action="{{ routes.search_url }}" method="get" role="search">
+        <label class="visually-hidden" for="HeaderSearch">{{ 'general.search.title' | t }}</label>
+        <input id="HeaderSearch" type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" autocomplete="off" data-predictive-input aria-controls="PredictiveResults">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="button">{{ 'general.search.submit' | t }}</button>
+      </form>
+      <div id="PredictiveResults" class="predictive-results" data-predictive-results aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="mobile-nav" id="MobileNav" hidden data-mobile-nav role="dialog" aria-modal="true" aria-label="{{ 'general.navigation.menu' | t }}">
+    <div class="mobile-nav__panel">
+      <button type="button" class="icon-button mobile-nav__close" data-mobile-nav-close>
+        {% render 'icon', icon: 'close' %}
+        <span class="visually-hidden">{{ 'general.navigation.close_menu' | t }}</span>
+      </button>
+      <ul class="mobile-nav__list">
+        {%- if main_menu != blank and main_menu.links.size > 0 -%}
+          {%- for link in main_menu.links -%}
+            <li class="mobile-nav__item">
+              {%- if link.links.size > 0 -%}
+                <details>
+                  <summary>{{ link.title | escape }}{% render 'icon', icon: 'chevron' %}</summary>
+                  <ul class="mobile-nav__sub">
+                    <li><a href="{{ link.url }}">{{ 'general.navigation.shop_all' | t: title: link.title }}</a></li>
+                    {%- for child in link.links -%}
+                      <li>
+                        {%- if child.links.size > 0 -%}
+                          <details>
+                            <summary>{{ child.title | escape }}{% render 'icon', icon: 'chevron' %}</summary>
+                            <ul class="mobile-nav__sub">
+                              <li><a href="{{ child.url }}">{{ 'general.navigation.shop_all' | t: title: child.title }}</a></li>
+                              {%- for grandchild in child.links -%}
+                                <li><a href="{{ grandchild.url }}">{{ grandchild.title | escape }}</a></li>
+                              {%- endfor -%}
+                            </ul>
+                          </details>
+                        {%- else -%}
+                          <a href="{{ child.url }}">{{ child.title | escape }}</a>
+                        {%- endif -%}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </details>
+              {%- else -%}
+                <a href="{{ link.url }}">{{ link.title | escape }}</a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          {% render 'mega-menu-default', mode: 'mobile' %}
+        {%- endif -%}
+      </ul>
+    </div>
+    <button type="button" class="mobile-nav__backdrop" tabindex="-1" aria-hidden="true" data-mobile-nav-close></button>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu (3 levels become a mega menu)",
+      "info": "Leave empty to use the built-in Men / Women / Kids / More menu.",
+      "default": "main-menu"
+    },
+    { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true }
+  ]
+}
+{% endschema %}

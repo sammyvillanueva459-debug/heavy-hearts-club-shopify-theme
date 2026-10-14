@@ -1,0 +1,193 @@
+{%- comment -%}
+  Renders ONE color's gallery (main slides + thumbnails). The product page renders the selected
+  color directly and every other color inside a <template>, so only photos explicitly associated
+  with a color are ever shown for that color.
+
+  Association sources (all explicit, see docs/COLOR-MEDIA.md):
+    1. Product metafield hhc.color_media (json):   { "Navy Blue": [123, 456] }
+    2. Media alt text tag:                          "Front view [[color:navy blue|view:front]]"
+       - several colors:  [[color:black,navy blue]]   - all colors: [[color:all]]
+    3. Shopify's own variant image (variant.featured_media) when the media carries no tag.
+  Missing associations fall back to the variant image, then to untagged media, then to the
+  product's featured media.
+
+  Accepts:
+  - product: {Object} product
+  - color: {String} handleized color value; blank renders all media (products without a color option)
+  - color_label: {String} display name for the color
+  - color_position: {Number} position (1-3) of the color option
+  - prefer_back: {Boolean} start on a media tagged view:back when present
+  - set_id: {String} unique id prefix
+  - eager: {Boolean} load the first image eagerly
+{%- endcomment -%}
+{%- assign meta_map = product.metafields.hhc.color_media.value -%}
+{%- assign meta_all = ',' -%}
+{%- assign meta_mine = ',' -%}
+{%- if meta_map != blank -%}
+  {%- for pair in meta_map -%}
+    {%- assign pair_key = pair[0] | handleize -%}
+    {%- for media_id in pair[1] -%}
+      {%- assign meta_all = meta_all | append: media_id | append: ',' -%}
+      {%- if pair_key == color -%}
+        {%- assign meta_mine = meta_mine | append: media_id | append: ',' -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign variant_media_mine = ',' -%}
+{%- if color != blank -%}
+  {%- assign color_index = color_position | minus: 1 -%}
+  {%- for variant in product.variants -%}
+    {%- assign variant_color = variant.options[color_index] | handleize -%}
+    {%- if variant.featured_media and variant_color == color -%}
+      {%- assign variant_media_mine = variant_media_mine | append: variant.featured_media.id | append: ',' -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign selected_ids = ',' -%}
+{%- assign untagged_ids = ',' -%}
+{%- assign selected_count = 0 -%}
+{%- for media in product.media -%}
+  {%- assign media_key = ',' | append: media.id | append: ',' -%}
+  {%- assign tag_colors = ',' -%}
+  {%- assign alt_parts = media.alt | split: '[[' -%}
+  {%- if alt_parts.size > 1 -%}
+    {%- assign tag_fields = alt_parts[1] | split: ']]' | first | split: '|' -%}
+    {%- for field in tag_fields -%}
+      {%- assign kv = field | split: ':' -%}
+      {%- assign kv_key = kv[0] | strip | downcase -%}
+      {%- if kv_key == 'color' or kv_key == 'colour' -%}
+        {%- assign tag_values = kv[1] | split: ',' -%}
+        {%- for tag_color in tag_values -%}
+          {%- assign tag_handle = tag_color | handleize -%}
+          {%- assign tag_colors = tag_colors | append: tag_handle | append: ',' -%}
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+  {%- assign has_meta = false -%}
+  {%- if meta_all contains media_key -%}{%- assign has_meta = true -%}{%- endif -%}
+
+  {%- if color == blank -%}
+    {%- assign selected_ids = selected_ids | append: media.id | append: ',' -%}
+    {%- assign selected_count = selected_count | plus: 1 -%}
+  {%- else -%}
+    {%- assign color_key = ',' | append: color | append: ',' -%}
+    {%- assign include_media = false -%}
+    {%- if tag_colors contains color_key or tag_colors contains ',all,' -%}
+      {%- assign include_media = true -%}
+    {%- elsif meta_mine contains media_key -%}
+      {%- assign include_media = true -%}
+    {%- elsif tag_colors == ',' and has_meta == false and variant_media_mine contains media_key -%}
+      {%- assign include_media = true -%}
+    {%- endif -%}
+    {%- if tag_colors == ',' and has_meta == false -%}
+      {%- assign untagged_ids = untagged_ids | append: media.id | append: ',' -%}
+    {%- endif -%}
+    {%- if include_media -%}
+      {%- assign selected_ids = selected_ids | append: media.id | append: ',' -%}
+      {%- assign selected_count = selected_count | plus: 1 -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- assign fallback = 'none' -%}
+{%- if selected_count == 0 -%}
+  {%- if variant_media_mine != ',' -%}
+    {%- assign selected_ids = variant_media_mine -%}
+    {%- assign fallback = 'variant' -%}
+  {%- elsif untagged_ids != ',' -%}
+    {%- assign selected_ids = untagged_ids -%}
+    {%- assign fallback = 'untagged' -%}
+  {%- elsif product.featured_media -%}
+    {%- assign selected_ids = ',' | append: product.featured_media.id | append: ',' -%}
+    {%- assign fallback = 'featured' -%}
+  {%- endif -%}
+{%- endif -%}
+
+{%- comment -%} Pick the starting media: first view:back (when enabled), otherwise the first one. {%- endcomment -%}
+{%- assign main_id = '' -%}
+{%- assign first_id = '' -%}
+{%- for media in product.media -%}
+  {%- assign media_key = ',' | append: media.id | append: ',' -%}
+  {%- if selected_ids contains media_key -%}
+    {%- if first_id == '' -%}{%- assign first_id = media.id -%}{%- endif -%}
+    {%- if prefer_back and main_id == '' -%}
+      {%- assign back_parts = media.alt | split: '[[' -%}
+      {%- assign back_fields = back_parts[1] | split: ']]' | first | split: '|' -%}
+      {%- for field in back_fields -%}
+        {%- assign kv = field | split: ':' -%}
+        {%- assign kv_key = kv[0] | strip | downcase -%}
+        {%- assign kv_value = kv[1] | strip | downcase -%}
+        {%- if kv_key == 'view' and kv_value == 'back' -%}{%- assign main_id = media.id -%}{%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if main_id == '' -%}{%- assign main_id = first_id -%}{%- endif -%}
+
+<div class="gallery-set" data-gallery-set data-color="{{ color }}" data-fallback="{{ fallback }}" data-count="{{ selected_count }}">
+  {%- if request.design_mode and fallback != 'none' and color != blank -%}
+    <p class="gallery-set__notice" role="note">{{ 'products.gallery.fallback_notice' | t: color: color_label }}</p>
+  {%- endif -%}
+  <div class="gallery-set__stage">
+    <button type="button" class="gallery-nav gallery-nav--prev" data-gallery-prev aria-label="{{ 'products.gallery.previous' | t }}">{% render 'icon', icon: 'arrow-left' %}</button>
+    <ul class="gallery-set__slides" data-gallery-slides tabindex="0" role="list" aria-label="{{ 'products.gallery.label' | t: color: color_label }}">
+      {%- assign slide_index = 0 -%}
+      {%- for media in product.media -%}
+        {%- assign media_key = ',' | append: media.id | append: ',' -%}
+        {%- if selected_ids contains media_key -%}
+          {%- assign alt_parts = media.alt | split: '[[' -%}
+          {%- assign clean_alt = alt_parts[0] | strip | default: product.title -%}
+          {%- assign view_label = '' -%}
+          {%- if alt_parts.size > 1 -%}
+            {%- assign view_fields = alt_parts[1] | split: ']]' | first | split: '|' -%}
+            {%- for field in view_fields -%}
+              {%- assign kv = field | split: ':' -%}
+              {%- assign kv_key = kv[0] | strip | downcase -%}
+              {%- if kv_key == 'view' -%}{%- assign view_label = kv[1] | strip | downcase -%}{%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+          <li class="gallery-slide{% if media.id == main_id %} is-active{% endif %}" data-gallery-slide data-media-id="{{ media.id }}" data-view="{{ view_label }}"{% if media.id == main_id %} data-main{% endif %}>
+            <img
+              src="{{ media.preview_image | image_url: width: 1100 }}"
+              srcset="{{ media.preview_image | image_url: width: 550 }} 550w, {{ media.preview_image | image_url: width: 800 }} 800w, {{ media.preview_image | image_url: width: 1100 }} 1100w, {{ media.preview_image | image_url: width: 1500 }} 1500w"
+              sizes="(min-width: 990px) 50vw, 100vw"
+              alt="{{ clean_alt | escape }}"
+              width="{{ media.preview_image.width }}"
+              height="{{ media.preview_image.height }}"
+              {% if eager and media.id == main_id %}loading="eager"{% else %}loading="lazy"{% endif %}
+              draggable="false"
+            >
+          </li>
+          {%- assign slide_index = slide_index | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+      {%- if slide_index == 0 -%}
+        <li class="gallery-slide is-active" data-gallery-slide data-main>{{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}</li>
+      {%- endif -%}
+    </ul>
+    <button type="button" class="gallery-nav gallery-nav--next" data-gallery-next aria-label="{{ 'products.gallery.next' | t }}">{% render 'icon', icon: 'arrow-right' %}</button>
+    <p class="gallery-set__counter" aria-live="polite" data-gallery-counter></p>
+  </div>
+
+  {%- if selected_count > 1 -%}
+    <ul class="gallery-set__thumbs" data-gallery-thumbs role="list">
+      {%- assign thumb_index = 0 -%}
+      {%- for media in product.media -%}
+        {%- assign media_key = ',' | append: media.id | append: ',' -%}
+        {%- if selected_ids contains media_key -%}
+          {%- assign thumb_number = thumb_index | plus: 1 -%}
+          <li>
+            <button type="button" class="gallery-thumb{% if media.id == main_id %} is-active{% endif %}" data-gallery-thumb data-index="{{ thumb_index }}" data-media-id="{{ media.id }}" aria-label="{{ 'products.gallery.show_image' | t: number: thumb_number }}"{% if media.id == main_id %} aria-current="true"{% endif %}>
+              <img src="{{ media.preview_image | image_url: width: 160, height: 200, crop: 'center' }}" alt="" width="80" height="100" loading="lazy">
+            </button>
+          </li>
+          {%- assign thumb_index = thumb_index | plus: 1 -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
