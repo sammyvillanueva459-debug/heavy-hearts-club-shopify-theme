@@ -1,0 +1,1 @@
+# heavy-hearts-club-shopify-theme
